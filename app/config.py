@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     )
     LOG_ROTATION: str = "10 MB"
     DB_URL: str = "sqlite+aiosqlite:///data/db.sqlite3"
-    
+
     SECRET_KEY: str
     ALGORITHM: str
 
@@ -22,21 +22,9 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_DB: str
 
-    REDIS_HOST: str
-    REDIS_PORT: int
-    REDIS_DB: int
-    # REDIS_PASSWORD: str
-    # REDIS_USER: str
-
-
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
     )
-
-    def get_redis_url(self):
-        return (
-            f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
-        )
 
     def get_db_url(self):
         return (
@@ -59,4 +47,3 @@ logger.add(
 DATABASE_LITE_URL = settings.DB_URL
 
 DATABASE_PG_URL = settings.get_db_url()
-REDIS_URL = settings.get_redis_url()
