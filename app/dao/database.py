@@ -12,7 +12,6 @@ engine = create_async_engine(url=DATABASE_PG_URL)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 
-
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 
