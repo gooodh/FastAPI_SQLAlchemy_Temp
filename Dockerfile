@@ -5,21 +5,20 @@ FROM python:3.12-slim-bookworm as builder
 WORKDIR /usr/src/app
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# install system dependencies
+# install system dependencies and upgrade pip in one layer
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
-    rm -rf /var/lib/apt/lists/*
+    pip install --upgrade pip && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /usr/src/app/wheels
 
-# Обновляем pip
-RUN pip install --upgrade pip && mkdir -p /usr/src/app/wheels
-
-# install python dependencies
+# install python dependencies as wheels
 COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
-
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt && \
+    rm -rf /root/.cache/pip  # clean pip cache
 
 #########
 # FINAL #
@@ -28,31 +27,26 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 # pull official base image
 FROM python:3.12-slim-bookworm
 
-# create directory for the app user
-RUN mkdir -p /home/app
-
 # create the app user
-RUN addgroup --system app && adduser --system --group app
+RUN groupadd --system app && \
+    adduser --system --group app --home /home/app && \
+    mkdir -p /home/app/web
 
-# create the appropriate directories
-ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
-RUN mkdir $APP_HOME
+# set environment variables
+ENV HOME=/home/app \
+    APP_HOME=/home/app/web \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR $APP_HOME
 
-# install dependencies
-RUN apt-get update && apt-get install -y
-COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache /wheels/*
+# copy and install wheels (no apt needed)
+COPY --from=builder /usr/src/app/wheels /tmp/wheels
+RUN pip install --no-cache-dir --no-deps /tmp/wheels/* && \
+    rm -rf /tmp/wheels
 
-
-# copy project
-COPY . $APP_HOME
-
-# chown all the files to the app user
-RUN chown -R app:app $APP_HOME
+# copy project with chown
+COPY --chown=app:app . $APP_HOME
 
 # change to the app user
 USER app
