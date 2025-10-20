@@ -3,6 +3,8 @@ from typing import AsyncGenerator
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from loguru import logger
 
 from app.auth.router import router as router_auth
@@ -71,3 +73,5 @@ def register_routers(app: FastAPI) -> None:
 
 # Создание экземпляра приложения
 app = create_app()
+
+Instrumentator().instrument(app).expose(app)
