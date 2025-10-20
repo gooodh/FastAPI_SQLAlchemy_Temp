@@ -1,5 +1,4 @@
 import os
-from typing import List
 from loguru import logger
 
 
@@ -11,7 +10,6 @@ class Settings(BaseSettings):
         "{time:YYYY-MM-DD at HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
     )
     LOG_ROTATION: str = "10 MB"
-    DB_URL: str = "sqlite+aiosqlite:///data/db.sqlite3"
 
     SECRET_KEY: str
     ALGORITHM: str
@@ -44,6 +42,5 @@ logger.add(
     level="INFO",
     rotation=settings.LOG_ROTATION,
 )
-DATABASE_LITE_URL = settings.DB_URL
 
 DATABASE_PG_URL = settings.get_db_url()
