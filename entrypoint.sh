@@ -1,4 +1,3 @@
 #!/bin/bash
-python app/main.py
-
+ uvicorn app.main:app
 
