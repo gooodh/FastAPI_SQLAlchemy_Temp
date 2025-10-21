@@ -12,7 +12,14 @@ from app.dependencies.auth_dep import (
 from app.dependencies.dao_dep import get_session_with_commit, get_session_without_commit
 from app.exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordException
 from app.auth.dao import RoleDAO, UsersDAO
-from app.auth.schemas import RoleModel, SUserRegister, SUserAuth, EmailModel, SUserAddDB, SUserInfo
+from app.auth.schemas import (
+    RoleAddModel,
+    SUserRegister,
+    SUserAuth,
+    EmailModel,
+    SUserAddDB,
+    SUserInfo,
+)
 
 router = APIRouter()
 
@@ -84,10 +91,16 @@ async def process_refresh_token(
 
 
 @router.post("/addroles")
-async def addroles(role_data: RoleModel, session: AsyncSession = Depends(get_session_with_commit)):
+async def addroles(
+    role_data: RoleAddModel,
+    session: AsyncSession = Depends(get_session_with_commit),
+    current_admin: User = Depends(get_current_admin_user),
+):
     role_dao = RoleDAO(session)
+    role = await role_dao.find_one_or_none(filters=RoleAddModel(name=role_data.name))
+    if role:
+        raise UserAlreadyExistsException
     role_data_dict = role_data.model_dump()
 
-    await role_dao.add(values=RoleModel(**role_data_dict))
-
+    await role_dao.add(values=RoleAddModel(**role_data_dict))
     return {"message": "Роль успешно добавлена"}
