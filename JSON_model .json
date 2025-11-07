@@ -342,8 +342,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 23,
+        "h": 16,
+        "w": 12,
         "x": 0,
         "y": 6
       },
@@ -386,103 +386,26 @@
         "uid": "cf335zyta86bkd"
       },
       "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "footer": {
-              "reducers": []
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 171
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "labels"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 1893
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{detected_level=\"info\", filename=\"/var/lib/docker/containers/2a645e5bc4cfe21fba8844979f58d7da272e92eb013370cccbc59a86f5cff186/2a645e5bc4cfe21fba8844979f58d7da272e92eb013370cccbc59a86f5cff186-json.log\", job=\"docker\", service_name=\"docker\"}"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 498
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Line"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 694
-              }
-            ]
-          }
-        ]
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 11
+        "h": 16,
+        "w": 12,
+        "x": 12,
+        "y": 6
       },
       "id": 2,
       "options": {
-        "cellHeight": "sm",
-        "frameIndex": 1,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Time"
-          }
-        ]
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
       },
       "pluginVersion": "12.2.0",
       "targets": [
@@ -493,13 +416,14 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{compose_service=\"app\"} | json ",
+          "expr": "{compose_service=\"app\"}",
+          "legendFormat": "",
           "queryType": "range",
           "refId": "A"
         }
       ],
       "title": "Log of All FastAPI App",
-      "type": "table"
+      "type": "logs"
     }
   ],
   "preload": false,
@@ -559,5 +483,5 @@
   "timezone": "",
   "title": "FastAPI Observability",
   "uid": "fastapi-observability",
-  "version": 9
+  "version": 12
 }
