@@ -1,8 +1,14 @@
 
 docker compose up -d --build
-http://localhost:15432/
+
 docker compose down
 docker compose down -v
+
+http://localhost:15432/
+http://localhost:3000/  #  grafana
+http://localhost:8080/  #  app
+
+
 docker exec app_postgres_container hostname -I или -i
 
 alembic init -t async app/migration
