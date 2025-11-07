@@ -107,7 +107,7 @@ prometheus:
 
 copy the contents of JSON_model.json to the Grafana settings
 
-![[ab/screenshot_1.png]]
-![[ab/screenshot_2.png]]
-![[ab/screenshot_3.png]]
-![[ab/screenshot_4.png]]
+![grafana](ab/screenshot_1.png)
+![grafana](ab/screenshot_2.png)
+![grafana](ab/screenshot_3.png)
+![grafana](ab/screenshot_4.png)
