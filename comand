@@ -8,7 +8,6 @@ http://localhost:15432/
 http://localhost:3000/  #  grafana
 http://localhost:8080/  #  app
 
-{filename="/var/lib/docker/containers/6c1e3993dabcfce1d10c3d882e08fd663383f31587f579e7a9ecfa1b6e55abc9/6c1e3993dabcfce1d10c3d882e08fd663383f31587f579e7a9ecfa1b6e55abc9-json.log"}
 
 docker exec app_postgres_container hostname -I или -i
 
