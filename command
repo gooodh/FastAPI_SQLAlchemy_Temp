@@ -8,6 +8,7 @@ http://localhost:15432/
 http://localhost:3000/  #  grafana
 http://localhost:8080/  #  app
 
+python -m pytest tests/ -v
 
 docker exec app_postgres_container hostname -I или -i
 
