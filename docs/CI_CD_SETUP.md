@@ -38,11 +38,8 @@
 ### 2. Code Quality (`code-quality.yml`)
 
 **Проверки:**
-- Black (форматирование)
-- isort (сортировка импортов)
-- Flake8 (линтинг)
+- Ruff (линтинг, форматирование, сортировка импортов, безопасность)
 - MyPy (типизация)
-- Bandit (безопасность)
 - Radon (сложность кода)
 
 ### 3. Dependency Update (`dependency-update.yml`)
@@ -118,14 +115,20 @@ make pre-commit-install
 # Тесты
 make ci-test
 
-# Качество кода
+# Качество кода (линтинг + форматирование)
 make ci-lint
 
 # Безопасность
 make ci-security
 
-# Форматирование
+# Форматирование (исправляет ошибки автоматически)
 make format
+
+# Только проверка линтинга
+ruff check app/ tests/
+
+# Только форматирование
+ruff format app/ tests/
 ```
 
 ## Docker

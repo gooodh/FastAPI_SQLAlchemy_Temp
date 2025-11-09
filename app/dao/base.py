@@ -1,17 +1,22 @@
-from typing import List, TypeVar, Generic, Type
-from pydantic import BaseModel
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.future import select
-from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete, func
+from typing import Generic, TypeVar
+
 from loguru import logger
+from pydantic import BaseModel
+from sqlalchemy import delete as sqlalchemy_delete
+from sqlalchemy import func
+from sqlalchemy import update as sqlalchemy_update
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
 from .database import Base
+
 
 T = TypeVar("T", bound=Base)
 
 
 class BaseDAO(Generic[T]):
-    model: Type[T] = None
+    model: type[T] = None
 
     def __init__(self, session: AsyncSession):
         self._session = session
@@ -78,7 +83,7 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка при добавлении записи: {e}")
             raise
 
-    async def add_many(self, instances: List[BaseModel]):
+    async def add_many(self, instances: list[BaseModel]):
         values_list = [item.model_dump(exclude_unset=True) for item in instances]
         logger.info(
             f"Добавление нескольких записей {self.model.__name__}. Количество: {len(values_list)}"
@@ -145,7 +150,7 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка при подсчете записей: {e}")
             raise
 
-    async def bulk_update(self, records: List[BaseModel]):
+    async def bulk_update(self, records: list[BaseModel]):
         logger.info(f"Массовое обновление записей {self.model.__name__}")
         try:
             updated_count = 0

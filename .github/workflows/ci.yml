@@ -9,7 +9,7 @@ on:
     types: [ published ]
 
 env:
-  PYTHON_VERSION: "3.12"
+  PYTHON_VERSION: "3.13"
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
@@ -51,6 +51,7 @@ jobs:
       run: |
         uv sync --all-extras --dev
         uv pip install -r tests/requirements-test.txt
+        uv add ruff
 
     - name: Create test environment file
       run: |
@@ -62,11 +63,10 @@ jobs:
         ENVIRONMENT=test
         EOF
 
-    - name: Run linting
+    - name: Run linting and formatting checks
       run: |
-        uv run flake8 app/ tests/ --max-line-length=88 --extend-ignore=E203,W503 || true
-        uv run black --check app/ tests/ || true
-        uv run isort --check-only app/ tests/ || true
+        uv run ruff check app/ tests/
+        uv run ruff format --check app/ tests/
 
     - name: Run unit tests
       run: |
@@ -104,11 +104,11 @@ jobs:
 
     - name: Install security tools
       run: |
-        pip install bandit safety
+        pip install safety ruff
 
-    - name: Run Bandit security scan
+    - name: Run Ruff security checks
       run: |
-        bandit -r app/ -f json -o bandit-report.json || true
+        ruff check app/ tests/ --select S --output-format=json > ruff-security-report.json || true
 
     - name: Run Safety check
       run: |
@@ -119,7 +119,7 @@ jobs:
       with:
         name: security-reports
         path: |
-          bandit-report.json
+          ruff-security-report.json
           safety-report.json
 
   build:

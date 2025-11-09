@@ -1,13 +1,11 @@
 """
 Тесты для обработки исключений.
 """
+
 import pytest
 from fastapi import HTTPException
 
-from app.exceptions import (
-    UserAlreadyExistsException,
-    IncorrectEmailOrPasswordException
-)
+from app.exceptions import IncorrectEmailOrPasswordException, UserAlreadyExistsException
 
 
 class TestCustomExceptions:
@@ -17,7 +15,7 @@ class TestCustomExceptions:
         """Тест исключения существующего пользователя."""
         with pytest.raises(HTTPException) as exc_info:
             raise UserAlreadyExistsException
-        
+
         assert exc_info.value.status_code == 409
         assert "уже существует" in exc_info.value.detail.lower()
 
@@ -25,9 +23,12 @@ class TestCustomExceptions:
         """Тест исключения неверного email или пароля."""
         with pytest.raises(HTTPException) as exc_info:
             raise IncorrectEmailOrPasswordException
-        
+
         assert exc_info.value.status_code == 400
-        assert "неверн" in exc_info.value.detail.lower() or "incorrect" in exc_info.value.detail.lower()
+        assert (
+            "неверн" in exc_info.value.detail.lower()
+            or "incorrect" in exc_info.value.detail.lower()
+        )
 
     def test_exception_inheritance(self):
         """Тест наследования исключений от HTTPException."""
@@ -38,11 +39,11 @@ class TestCustomExceptions:
         """Тест атрибутов исключений."""
         user_exists_exc = UserAlreadyExistsException
         incorrect_creds_exc = IncorrectEmailOrPasswordException
-        
+
         # Проверяем, что исключения имеют правильные коды статуса
         assert user_exists_exc.status_code == 409
         assert incorrect_creds_exc.status_code == 400
-        
+
         # Проверяем, что исключения имеют сообщения
         assert user_exists_exc.detail is not None
         assert incorrect_creds_exc.detail is not None

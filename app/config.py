@@ -1,7 +1,6 @@
 import os
+
 from loguru import logger
-
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

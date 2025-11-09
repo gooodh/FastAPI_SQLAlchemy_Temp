@@ -42,10 +42,9 @@ tests/
 
 ```bash
 # Установка основных зависимостей
-pip install -r requirements.txt
-
+uv sync
 # Установка тестовых зависимостей
-pip install -r tests/requirements-test.txt
+uv pip install -r tests/requirements-test.txt
 ```
 
 ## Запуск тестов

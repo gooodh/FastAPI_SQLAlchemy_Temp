@@ -28,27 +28,23 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync
-        uv pip install black isort flake8 mypy bandit
+        uv pip install ruff mypy
 
-    - name: Run Black (code formatting)
+    - name: Run Ruff (linting)
       run: |
-        uv run black --check --diff app/ tests/
+        uv run ruff check app/ tests/ --diff
 
-    - name: Run isort (import sorting)
+    - name: Run Ruff (formatting check)
       run: |
-        uv run isort --check-only --diff app/ tests/
-
-    - name: Run Flake8 (linting)
-      run: |
-        uv run flake8 app/ tests/ --max-line-length=88 --extend-ignore=E203,W503
+        uv run ruff format --check --diff app/ tests/
 
     - name: Run MyPy (type checking)
       run: |
         uv run mypy app/ --ignore-missing-imports --no-strict-optional
 
-    - name: Run Bandit (security linting)
+    - name: Run Ruff security checks
       run: |
-        uv run bandit -r app/ -ll
+        uv run ruff check app/ tests/ --select S
 
     - name: Check for TODO/FIXME comments
       run: |
