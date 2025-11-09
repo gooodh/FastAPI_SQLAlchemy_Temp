@@ -66,3 +66,28 @@ setup-dev:  ## Настроить среду разработки
 	python -m venv .venv
 	source .venv/bin/activate && pip install -r requirements.txt
 	source .venv/bin/activate && pip install -r tests/requirements-test.txt
+
+ci-install:  ## Установить зависимости для CI
+	pip install -r requirements.txt
+	pip install -r tests/requirements-test.txt
+	pip install black isort flake8 mypy bandit safety
+
+ci-test:  ## Запустить тесты для CI
+	pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+
+ci-lint:  ## Проверить код для CI
+	black --check app/ tests/
+	isort --check-only app/ tests/
+	flake8 app/ tests/
+	mypy app/ --ignore-missing-imports
+
+ci-security:  ## Проверить безопасность для CI
+	bandit -r app/ -ll
+	safety check
+
+pre-commit-install:  ## Установить pre-commit хуки
+	pip install pre-commit
+	pre-commit install
+
+pre-commit-run:  ## Запустить pre-commit на всех файлах
+	pre-commit run --all-files
