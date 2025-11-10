@@ -7,23 +7,22 @@ requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.17.0",
     "asyncpg>=0.30.0",
-    "bcrypt==4.1.2",
+    "bcrypt==4.0.1",
     "fastapi[all]>=0.119.0",
     "jinja2>=3.1.6",
     "loguru>=0.7.3",
-    "passlib[bcrypt]>=1.7.4",
+    "passlib[bcrypt]==1.7.4",
     "prometheus-fastapi-instrumentator>=7.1.0",
     "pydantic-settings>=2.11.0",
     "pydantic[email]>=2.12.3",
     "python-jose>=3.5.0",
-    "ruff>=0.14.4",
     "sqlalchemy>=2.0.44",
 ]
 
 [tool.ruff]
 # Основные настройки
 line-length = 88
-target-version = "py312"
+target-version = "py313"
 
 # Директории для исключения
 exclude = [
@@ -49,6 +48,7 @@ exclude = [
     "node_modules",
     "venv",
     "migrations",
+    "app/migration/versions",  # Исключаем файлы миграций Alembic
 ]
 
 # Правила для проверки
@@ -82,6 +82,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "ARG001", "ARG002"]  # Allow assert and unused args in tests
 "__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+"app/migration/versions/*" = ["ALL"]  # Ignore all rules for migration files
 
 # Настройки isort (сортировка импортов)
 [tool.ruff.lint.isort]
