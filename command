@@ -1,4 +1,4 @@
-
+uvicorn app.main:app --host 0.0.0.0 --port 8080
 docker compose up -d --build
 
 docker compose down
