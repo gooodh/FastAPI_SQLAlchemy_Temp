@@ -76,6 +76,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]  # Allow assert in tests
+"app/migration/versions/*" = ["ALL"]  # Ignore all rules for migration files
 
 [tool.ruff.format]
 quote-style = "double"
@@ -219,6 +220,45 @@ very_long_line = "This line is too long but we need it for some reason"
 # Игнорировать правило в файле
 # ruff: noqa: F401
 import unused_module
+```
+
+## Исключение файлов и папок
+
+### Исключение целых директорий
+Добавьте пути в секцию `exclude`:
+```toml
+[tool.ruff]
+exclude = [
+    "migrations",
+    "app/migration/versions",  # Файлы миграций Alembic
+    "build",
+    "dist",
+]
+```
+
+### Исключение правил для конкретных файлов
+Используйте `per-file-ignores`:
+```toml
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # Разрешить assert в тестах
+"app/migration/versions/*" = ["ALL"]  # Игнорировать все правила для миграций
+"__init__.py" = ["F401"]  # Разрешить неиспользуемые импорты
+```
+
+### Исключение правил в коде
+```python
+# Игнорировать правило в конкретной строке
+password = "hardcoded"  # ruff: noqa: S105
+
+# Игнорировать несколько правил
+import unused_module  # ruff: noqa: F401, I001
+
+# Игнорировать все правила в строке
+some_complex_code()  # ruff: noqa
+
+# Игнорировать правило в файле (в начале файла)
+# ruff: noqa: F401
+import lots_of_unused_modules
 ```
 
 ## Troubleshooting
