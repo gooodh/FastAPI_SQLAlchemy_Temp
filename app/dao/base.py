@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from loguru import logger
 from pydantic import BaseModel
@@ -111,10 +111,11 @@ class BaseDAO[T: Base]:
                 .values(**values_dict)
                 .execution_options(synchronize_session="fetch")
             )
-            result = await self._session.execute(query)
-            logger.info(f"Обновлено {result.rowcount} записей.")
+            result: Any = await self._session.execute(query)
+            rowcount = result.rowcount or 0
+            logger.info(f"Обновлено {rowcount} записей.")
             await self._session.flush()
-            return result.rowcount
+            return rowcount
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при обновлении записей: {e}")
             raise
@@ -127,10 +128,11 @@ class BaseDAO[T: Base]:
             raise ValueError("Нужен хотя бы один фильтр для удаления.")
         try:
             query = sqlalchemy_delete(self.model).filter_by(**filter_dict)
-            result = await self._session.execute(query)
-            logger.info(f"Удалено {result.rowcount} записей.")
+            result: Any = await self._session.execute(query)
+            rowcount = result.rowcount or 0
+            logger.info(f"Удалено {rowcount} записей.")
             await self._session.flush()
-            return result.rowcount
+            return rowcount
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при удалении записей: {e}")
             raise
@@ -165,8 +167,8 @@ class BaseDAO[T: Base]:
                     .filter_by(id=record_dict["id"])
                     .values(**update_data)
                 )
-                result = await self._session.execute(stmt)
-                updated_count += result.rowcount
+                result: Any = await self._session.execute(stmt)
+                updated_count += result.rowcount or 0
 
             logger.info(f"Обновлено {updated_count} записей")
             await self._session.flush()
