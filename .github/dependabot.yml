@@ -25,7 +25,7 @@ updates:
       time: "09:00"
     open-pull-requests-limit: 5
     reviewers:
-      - "maintainer-username"  # Замените на ваш username
+      - "gooodh"  # Замените на ваш username
     commit-message:
       prefix: "ci"
       include: "scope"
