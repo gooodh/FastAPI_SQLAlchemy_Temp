@@ -31,7 +31,7 @@ class Base(AsyncAttrs, DeclarativeBase):
         TIMESTAMP, server_default=func.now(), onupdate=func.now()
     )
 
-    @declared_attr
+    @declared_attr.directive
     def __tablename__(cls) -> str:
         return cls.__name__.lower() + "s"
 
