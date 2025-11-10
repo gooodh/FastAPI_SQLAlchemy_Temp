@@ -10,14 +10,14 @@ class Settings(BaseSettings):
     )
     LOG_ROTATION: str = "10 MB"
 
-    SECRET_KEY: str
-    ALGORITHM: str
+    SECRET_KEY: str = "test-secret-key"
+    ALGORITHM: str = "HS256"
 
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int
-    POSTGRES_DB: str
+    POSTGRES_USER: str = "test"
+    POSTGRES_PASSWORD: str = "test"
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = "test"
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
@@ -33,13 +33,14 @@ class Settings(BaseSettings):
 # Получаем параметры для загрузки переменных среды
 settings = Settings()
 
-
-log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.log")
-logger.add(
-    log_file_path,
-    format=settings.FORMAT_LOG,
-    level="INFO",
-    rotation=settings.LOG_ROTATION,
-)
+# Инициализация логирования только если не в тестовом режиме
+if "pytest" not in os.environ.get("_", "") and "PYTEST_CURRENT_TEST" not in os.environ:
+    log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.log")
+    logger.add(
+        log_file_path,
+        format=settings.FORMAT_LOG,
+        level="INFO",
+        rotation=settings.LOG_ROTATION,
+    )
 
 DATABASE_PG_URL = settings.get_db_url()
