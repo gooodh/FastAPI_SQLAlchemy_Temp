@@ -1,17 +1,22 @@
-from typing import List, TypeVar, Generic, Type
-from pydantic import BaseModel
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.future import select
-from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete, func
+from typing import Any, TypeVar
+
 from loguru import logger
+from pydantic import BaseModel
+from sqlalchemy import delete as sqlalchemy_delete
+from sqlalchemy import func
+from sqlalchemy import update as sqlalchemy_update
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from .database import Base
+from sqlalchemy.future import select
+
+from app.dao.database import Base
+
 
 T = TypeVar("T", bound=Base)
 
 
-class BaseDAO(Generic[T]):
-    model: Type[T] = None
+class BaseDAO[T: Base]:
+    model: type[T] = None
 
     def __init__(self, session: AsyncSession):
         self._session = session
@@ -78,7 +83,7 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка при добавлении записи: {e}")
             raise
 
-    async def add_many(self, instances: List[BaseModel]):
+    async def add_many(self, instances: list[BaseModel]):
         values_list = [item.model_dump(exclude_unset=True) for item in instances]
         logger.info(
             f"Добавление нескольких записей {self.model.__name__}. Количество: {len(values_list)}"
@@ -106,10 +111,11 @@ class BaseDAO(Generic[T]):
                 .values(**values_dict)
                 .execution_options(synchronize_session="fetch")
             )
-            result = await self._session.execute(query)
-            logger.info(f"Обновлено {result.rowcount} записей.")
+            result: Any = await self._session.execute(query)
+            rowcount = result.rowcount or 0
+            logger.info(f"Обновлено {rowcount} записей.")
             await self._session.flush()
-            return result.rowcount
+            return rowcount
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при обновлении записей: {e}")
             raise
@@ -122,10 +128,11 @@ class BaseDAO(Generic[T]):
             raise ValueError("Нужен хотя бы один фильтр для удаления.")
         try:
             query = sqlalchemy_delete(self.model).filter_by(**filter_dict)
-            result = await self._session.execute(query)
-            logger.info(f"Удалено {result.rowcount} записей.")
+            result: Any = await self._session.execute(query)
+            rowcount = result.rowcount or 0
+            logger.info(f"Удалено {rowcount} записей.")
             await self._session.flush()
-            return result.rowcount
+            return rowcount
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при удалении записей: {e}")
             raise
@@ -145,7 +152,7 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка при подсчете записей: {e}")
             raise
 
-    async def bulk_update(self, records: List[BaseModel]):
+    async def bulk_update(self, records: list[BaseModel]):
         logger.info(f"Массовое обновление записей {self.model.__name__}")
         try:
             updated_count = 0
@@ -160,8 +167,8 @@ class BaseDAO(Generic[T]):
                     .filter_by(id=record_dict["id"])
                     .values(**update_data)
                 )
-                result = await self._session.execute(stmt)
-                updated_count += result.rowcount
+                result: Any = await self._session.execute(stmt)
+                updated_count += result.rowcount or 0
 
             logger.info(f"Обновлено {updated_count} записей")
             await self._session.flush()

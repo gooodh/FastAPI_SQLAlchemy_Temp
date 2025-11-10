@@ -1,9 +1,11 @@
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.dao.database import async_session_maker
 
 
-async def get_session_with_commit() -> AsyncGenerator[AsyncSession, None]:
+async def get_session_with_commit() -> AsyncGenerator[AsyncSession]:
     """Асинхронная сессия с автоматическим коммитом."""
     async with async_session_maker() as session:
         try:
@@ -16,7 +18,7 @@ async def get_session_with_commit() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
-async def get_session_without_commit() -> AsyncGenerator[AsyncSession, None]:
+async def get_session_without_commit() -> AsyncGenerator[AsyncSession]:
     """Асинхронная сессия без автоматического коммита."""
     async with async_session_maker() as session:
         try:

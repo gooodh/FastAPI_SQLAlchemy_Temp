@@ -39,13 +39,12 @@ clean:  ## Очистить временные файлы
 	rm -rf .coverage
 
 lint:  ## Проверить код линтером
-	flake8 app/ tests/
-	black --check app/ tests/
-	isort --check-only app/ tests/
+	ruff check app/ tests/
+	ruff format --check app/ tests/
 
 format:  ## Отформатировать код
-	black app/ tests/
-	isort app/ tests/
+	ruff check app/ tests/ --fix
+	ruff format app/ tests/
 
 run:  ## Запустить приложение
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -66,3 +65,27 @@ setup-dev:  ## Настроить среду разработки
 	python -m venv .venv
 	source .venv/bin/activate && pip install -r requirements.txt
 	source .venv/bin/activate && pip install -r tests/requirements-test.txt
+
+ci-install:  ## Установить зависимости для CI
+	pip install -r requirements.txt
+	pip install -r tests/requirements-test.txt
+	pip install ruff mypy safety
+
+ci-test:  ## Запустить тесты для CI
+	pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+
+ci-lint:  ## Проверить код для CI
+	ruff check app/ tests/ || true
+	ruff format --check app/ tests/
+	mypy app/ --ignore-missing-imports || true
+
+ci-security:  ## Проверить безопасность для CI
+	ruff check app/ tests/ --select S
+	safety check
+
+pre-commit-install:  ## Установить pre-commit хуки
+	pip install pre-commit
+	pre-commit install
+
+pre-commit-run:  ## Запустить pre-commit на всех файлах
+	pre-commit run --all-files

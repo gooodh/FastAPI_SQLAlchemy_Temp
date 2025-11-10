@@ -11,7 +11,7 @@ anyio==4.11.0
     #   watchfiles
 asyncpg==0.30.0
     # via fastapi-sqlalchemy-temp
-bcrypt==4.1.2
+bcrypt==4.0.1
     # via
     #   fastapi-sqlalchemy-temp
     #   passlib
@@ -157,14 +157,12 @@ typer==0.19.2
 typing-extensions==4.15.0
     # via
     #   alembic
-    #   anyio
     #   fastapi
     #   pydantic
     #   pydantic-core
     #   pydantic-extra-types
     #   rich-toolkit
     #   sqlalchemy
-    #   starlette
     #   typer
     #   typing-inspection
 typing-inspection==0.4.2

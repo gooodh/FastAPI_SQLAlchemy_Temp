@@ -1,16 +1,17 @@
 """
 Тесты для схем Pydantic.
 """
+
 import pytest
 from pydantic import ValidationError
 
 from app.auth.schemas import (
-    SUserRegister, 
-    SUserAuth, 
-    EmailModel, 
-    UserBase,
+    EmailModel,
     RoleAddModel,
-    SUserInfo
+    SUserAuth,
+    SUserInfo,
+    SUserRegister,
+    UserBase,
 )
 
 
@@ -33,7 +34,7 @@ class TestUserSchemas:
             "email": "test@example.com",
             "phone_number": "+1234567890",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         user = UserBase(**user_data)
         assert user.phone_number == "+1234567890"
@@ -44,11 +45,11 @@ class TestUserSchemas:
             "email": "test@example.com",
             "phone_number": "1234567890",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         with pytest.raises(ValidationError) as exc_info:
             UserBase(**user_data)
-        
+
         assert "должен начинаться с" in str(exc_info.value)
 
     def test_user_base_invalid_phone_too_short(self):
@@ -57,7 +58,7 @@ class TestUserSchemas:
             "email": "test@example.com",
             "phone_number": "+123",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         with pytest.raises(ValidationError):
             UserBase(**user_data)
@@ -68,7 +69,7 @@ class TestUserSchemas:
             "email": "test@example.com",
             "phone_number": "+1234567890123456",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         with pytest.raises(ValidationError):
             UserBase(**user_data)
@@ -79,7 +80,7 @@ class TestUserSchemas:
             "email": "test@example.com",
             "phone_number": "+1234567890",
             "first_name": "A",  # Слишком короткое
-            "last_name": "B"    # Слишком короткое
+            "last_name": "B",  # Слишком короткое
         }
         with pytest.raises(ValidationError):
             UserBase(**user_data)
@@ -92,10 +93,10 @@ class TestUserSchemas:
             "first_name": "Тест",
             "last_name": "Пользователь",
             "password": "password123",
-            "confirm_password": "password123"
+            "confirm_password": "password123",
         }
         user = SUserRegister(**user_data)
-        
+
         assert user.email == "test@example.com"
         assert user.first_name == "Тест"
         # Пароль должен быть захеширован
@@ -110,11 +111,11 @@ class TestUserSchemas:
             "first_name": "Тест",
             "last_name": "Пользователь",
             "password": "password123",
-            "confirm_password": "different_password"
+            "confirm_password": "different_password",
         }
         with pytest.raises(ValidationError) as exc_info:
             SUserRegister(**user_data)
-        
+
         assert "не совпадают" in str(exc_info.value)
 
     def test_user_register_short_password(self):
@@ -125,19 +126,16 @@ class TestUserSchemas:
             "first_name": "Тест",
             "last_name": "Пользователь",
             "password": "123",
-            "confirm_password": "123"
+            "confirm_password": "123",
         }
         with pytest.raises(ValidationError):
             SUserRegister(**user_data)
 
     def test_user_auth_valid(self):
         """Тест валидной схемы авторизации."""
-        auth_data = {
-            "email": "test@example.com",
-            "password": "password123"
-        }
+        auth_data = {"email": "test@example.com", "password": "password123"}
         auth = SUserAuth(**auth_data)
-        
+
         assert auth.email == "test@example.com"
         assert auth.password == "password123"
 
@@ -145,27 +143,28 @@ class TestUserSchemas:
         """Тест схемы добавления роли."""
         role_data = {"name": "admin"}
         role = RoleAddModel(**role_data)
-        
+
         assert role.name == "admin"
 
     def test_user_info_computed_fields(self):
         """Тест вычисляемых полей в SUserInfo."""
+
         # Создаем мок роли
         class MockRole:
             id = 1
             name = "admin"
-        
+
         user_data = {
             "id": 1,
             "email": "test@example.com",
             "phone_number": "+1234567890",
             "first_name": "Тест",
             "last_name": "Пользователь",
-            "role": MockRole()
+            "role": MockRole(),
         }
-        
+
         user_info = SUserInfo(**user_data)
-        
+
         assert user_info.role_name == "admin"
         assert user_info.role_id == 1
 
@@ -179,7 +178,7 @@ class TestSchemaValidation:
             "email": "test@example.com",
             "phone_number": "+123abc7890",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         with pytest.raises(ValidationError):
             UserBase(**user_data)
@@ -190,7 +189,7 @@ class TestSchemaValidation:
             "email": "test@example.com",
             "phone_number": "+123 456 7890",
             "first_name": "Тест",
-            "last_name": "Пользователь"
+            "last_name": "Пользователь",
         }
         with pytest.raises(ValidationError):
             UserBase(**user_data)
@@ -198,19 +197,9 @@ class TestSchemaValidation:
     def test_empty_required_fields(self):
         """Тест пустых обязательных полей."""
         with pytest.raises(ValidationError):
-            UserBase(
-                email="",
-                phone_number="",
-                first_name="",
-                last_name=""
-            )
+            UserBase(email="", phone_number="", first_name="", last_name="")
 
     def test_none_values(self):
         """Тест None значений."""
         with pytest.raises(ValidationError):
-            UserBase(
-                email=None,
-                phone_number=None,
-                first_name=None,
-                last_name=None
-            )
+            UserBase(email=None, phone_number=None, first_name=None, last_name=None)

@@ -1,25 +1,25 @@
-from typing import List
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.auth.dao import RoleDAO, UsersDAO
 from app.auth.models import User
+from app.auth.schemas import (
+    EmailModel,
+    RoleAddModel,
+    SUserAddDB,
+    SUserAuth,
+    SUserInfo,
+    SUserRegister,
+)
 from app.auth.utils import authenticate_user, set_tokens
 from app.dependencies.auth_dep import (
-    get_current_user,
-    get_current_admin_user,
     check_refresh_token,
+    get_current_admin_user,
+    get_current_user,
 )
 from app.dependencies.dao_dep import get_session_with_commit, get_session_without_commit
-from app.exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordException
-from app.auth.dao import RoleDAO, UsersDAO
-from app.auth.schemas import (
-    RoleAddModel,
-    SUserRegister,
-    SUserAuth,
-    EmailModel,
-    SUserAddDB,
-    SUserInfo,
-)
+from app.exceptions import IncorrectEmailOrPasswordException, UserAlreadyExistsException
+
 
 router = APIRouter()
 
@@ -78,7 +78,7 @@ async def get_me(user_data: User = Depends(get_current_user)) -> SUserInfo:
 async def get_all_users(
     session: AsyncSession = Depends(get_session_with_commit),
     user_data: User = Depends(get_current_admin_user),
-) -> List[SUserInfo]:
+) -> list[SUserInfo]:
     return await UsersDAO(session).find_all()
 
 

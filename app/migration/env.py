@@ -1,17 +1,21 @@
 import sys
-from os.path import dirname, abspath
+from os.path import abspath, dirname
+
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 import asyncio
 from logging.config import fileConfig
+
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from alembic import context
+
 from app.config import DATABASE_PG_URL
 from app.dao.database import Base
 from app.auth.models import Role, User
+
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_PG_URL)

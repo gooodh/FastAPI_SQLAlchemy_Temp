@@ -172,3 +172,14 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# CI/CD artifacts
+reports/
+performance-results/
+bandit-report.json
+safety-report.json
+test.db
+.env.test.local
+
+# Pre-commit
+.pre-commit-config.yaml.bak
