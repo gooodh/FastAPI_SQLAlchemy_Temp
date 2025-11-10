@@ -69,6 +69,7 @@ async def client(db_session):
     try:
         # Для новых версий httpx (0.24+)
         from httpx import ASGITransport
+
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as ac:
             yield ac

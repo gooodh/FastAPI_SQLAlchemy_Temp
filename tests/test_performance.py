@@ -112,7 +112,7 @@ class TestPerformance:
 
         # Тестируем производительность поиска
         start_time = time.time()
-        for i in range(10):
+        for _ in range(10):
             await users_dao.find_all()
         end_time = time.time()
 
@@ -259,9 +259,8 @@ class TestLoadTesting:
                         successful += 1
                     # Небольшая задержка между запросами
                     await asyncio.sleep(0.01)
-                except Exception:
-                    pass  # Игнорируем ошибки в стресс-тесте
-
+                except Exception as e:
+                    print(f"Exception Стресс-тест: {e}")
             return successful
 
         # Запускаем 3 батча по 3 пользователя каждый (всего 9) для более стабильного результата

@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from loguru import logger
 from pydantic import BaseModel
@@ -9,13 +9,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from .database import Base
+from app.dao.database import Base
 
 
 T = TypeVar("T", bound=Base)
 
 
-class BaseDAO(Generic[T]):
+class BaseDAO[T: Base]:
     model: type[T] = None
 
     def __init__(self, session: AsyncSession):

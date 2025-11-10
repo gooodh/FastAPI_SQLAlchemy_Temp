@@ -88,15 +88,17 @@ POSTGRES_PORT=5432
 POSTGRES_DB=env_db
 """
 
-        with patch("builtins.open", mock_open(read_data=env_content)):
-            with patch("os.path.exists", return_value=True):
-                with patch.dict(os.environ, {}, clear=True):
-                    # Очищаем переменные окружения и загружаем из файла
-                    settings = Settings()
+        with (
+            patch("builtins.open", mock_open(read_data=env_content)),
+            patch("os.path.exists", return_value=True),
+            patch.dict(os.environ, {}, clear=True),
+        ):
+            # Очищаем переменные окружения и загружаем из файла
+            settings = Settings()
 
-                    # Проверяем, что настройки загрузились
-                    assert settings.SECRET_KEY is not None
-                    assert settings.POSTGRES_USER is not None
+            # Проверяем, что настройки загрузились
+            assert settings.SECRET_KEY is not None
+            assert settings.POSTGRES_USER is not None
 
     def test_required_fields_validation(self):
         """Тест валидации обязательных полей."""
