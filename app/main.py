@@ -11,7 +11,7 @@ from app.auth.router import router as router_auth
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[dict, None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[dict]:
     """Управление жизненным циклом приложения."""
     logger.info("Инициализация приложения...")
     yield
