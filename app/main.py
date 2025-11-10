@@ -11,7 +11,7 @@ from app.auth.router import router as router_auth
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[dict]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """Управление жизненным циклом приложения."""
     logger.info("Инициализация приложения...")
     yield
@@ -58,7 +58,7 @@ def register_routers(app: FastAPI) -> None:
     root_router = APIRouter()
 
     @root_router.get("/", tags=["root"])
-    def home_page():
+    def home_page() -> dict[str, str]:
         return {"message": "Добро пожаловать!"}
 
     # Подключение роутеров
