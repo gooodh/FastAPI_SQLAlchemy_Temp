@@ -48,7 +48,7 @@ exclude = [
     "node_modules",
     "venv",
     "migrations",
-    "app/migration/versions",  # Исключаем файлы миграций Alembic
+    "app/migration",  # Исключаем файлы миграций Alembic
 ]
 
 # Правила для проверки
