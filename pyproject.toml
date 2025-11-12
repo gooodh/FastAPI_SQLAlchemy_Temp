@@ -69,6 +69,7 @@ select = [
 
 # Игнорируем некоторые правила
 ignore = [
+    "S105",
     "E501",  # line too long (handled by formatter)
     "B008",  # do not perform function calls in argument defaults
     "S101",  # use of assert detected (allow in tests)

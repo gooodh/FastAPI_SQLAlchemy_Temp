@@ -16,7 +16,7 @@ T = TypeVar("T", bound=Base)
 
 
 class BaseDAO[T: Base]:
-    model: type[T] = None
+    model: type[T]
 
     def __init__(self, session: AsyncSession):
         self._session = session

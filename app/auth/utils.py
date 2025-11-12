@@ -46,7 +46,7 @@ def set_tokens(response: Response, user_id: int):
 
     response.set_cookie(
         key="user_access_token",
-        value=access_token,
+        value=str(access_token or ""),
         httponly=True,
         secure=True,
         samesite="lax",
@@ -54,7 +54,7 @@ def set_tokens(response: Response, user_id: int):
 
     response.set_cookie(
         key="user_refresh_token",
-        value=refresh_token,
+        value=str(refresh_token or ""),
         httponly=True,
         secure=True,
         samesite="lax",

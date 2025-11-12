@@ -21,7 +21,7 @@ class TestPasswordUtils:
 
     def test_get_password_hash(self):
         """Тест хеширования пароля."""
-        password = "test_password"
+        password = "test_password"  # noqa: S105
         hashed = get_password_hash(password)
 
         assert hashed != password
@@ -30,22 +30,22 @@ class TestPasswordUtils:
 
     def test_verify_password_correct(self):
         """Тест проверки правильного пароля."""
-        password = "test_password"
+        password = "test_password"  # noqa: S105
         hashed = get_password_hash(password)
 
         assert verify_password(password, hashed) is True
 
     def test_verify_password_incorrect(self):
         """Тест проверки неправильного пароля."""
-        password = "test_password"
-        wrong_password = "wrong_password"
+        password = "test_password"  # noqa: S105
+        wrong_password = "wrong_password"  # noqa: S105
         hashed = get_password_hash(password)
 
         assert verify_password(wrong_password, hashed) is False
 
     def test_password_hash_uniqueness(self):
         """Тест уникальности хешей для одного пароля."""
-        password = "test_password"
+        password = "test_password"  # noqa: S105
         hash1 = get_password_hash(password)
         hash2 = get_password_hash(password)
 
@@ -64,7 +64,7 @@ class TestAuthenticateUser:
     async def test_authenticate_user_success(self):
         """Тест успешной аутентификации пользователя."""
         # Создаем мок пользователя
-        password = "test_password"
+        password = "test_password"  # noqa: S105
         hashed_password = get_password_hash(password)
 
         user = Mock()
@@ -78,8 +78,8 @@ class TestAuthenticateUser:
     async def test_authenticate_user_wrong_password(self):
         """Тест аутентификации с неправильным паролем."""
         # Создаем мок пользователя
-        password = "test_password"
-        wrong_password = "wrong_password"
+        password = "test_password"  # noqa: S105
+        wrong_password = "wrong_password"  # noqa: S105
         hashed_password = get_password_hash(password)
 
         user = Mock()

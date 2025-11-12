@@ -100,7 +100,7 @@ class TestUserSchemas:
         assert user.email == "test@example.com"
         assert user.first_name == "Тест"
         # Пароль должен быть захеширован
-        assert user.password != "password123"
+        assert user.password != "password123"  # noqa: S105
         assert len(user.password) > 20  # Хеш длиннее оригинального пароля
 
     def test_user_register_password_mismatch(self):
@@ -137,7 +137,7 @@ class TestUserSchemas:
         auth = SUserAuth(**auth_data)
 
         assert auth.email == "test@example.com"
-        assert auth.password == "password123"
+        assert auth.password == "password123"  # noqa: S105
 
     def test_role_add_model(self):
         """Тест схемы добавления роли."""

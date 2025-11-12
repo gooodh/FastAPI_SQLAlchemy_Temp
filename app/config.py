@@ -10,11 +10,11 @@ class Settings(BaseSettings):
     )
     LOG_ROTATION: str = "10 MB"
 
-    SECRET_KEY: str = "test-secret-key"
+    SECRET_KEY: str = "test-secret-key"  # noqa: S105
     ALGORITHM: str = "HS256"
 
     POSTGRES_USER: str = "test"
-    POSTGRES_PASSWORD: str = "test"
+    POSTGRES_PASSWORD: str = "test"  # noqa: S105
     POSTGRES_HOST: str = "localhost"
     POSTGRES_PORT: int = 5432
     POSTGRES_DB: str = "test"
