@@ -33,7 +33,7 @@ class TestSettings:
                 == "{time:YYYY-MM-DD at HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
             )
             assert settings.LOG_ROTATION == "10 MB"
-            assert settings.SECRET_KEY == "test_secret"
+            assert settings.SECRET_KEY == "test_secret"  # noqa: S105
             assert settings.ALGORITHM == "HS256"
 
     def test_database_url_generation(self):

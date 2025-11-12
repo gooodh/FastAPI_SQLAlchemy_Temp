@@ -242,7 +242,7 @@ class TestLoadTesting:
             successful = 0
             for i in range(batch_size):
                 # Добавляем случайность для уникальности
-                random_suffix = random.randint(1000, 9999)
+                random_suffix = random.randint(1000, 9999)  # noqa: S311
                 user_id = batch_id * batch_size + i
                 user_data = {
                     "phone_number": f"+333{random_suffix}{user_id:04d}",
