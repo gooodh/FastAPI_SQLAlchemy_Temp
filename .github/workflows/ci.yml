@@ -55,7 +55,6 @@ jobs:
       run: |
         uv sync --all-extras --dev
         uv pip install -r tests/requirements-test.txt
-        uv add ruff
 
     - name: Create test environment file
       run: |
